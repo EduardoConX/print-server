@@ -1,2 +1,4 @@
+github.com/EduardoConX/escpos v0.0.0-20210331165021-dfba0aa7af7d h1:4qMR6PEn4NunKWFOBs5Bt9f0RwL2sdyBdZTcZ5zl138=
+github.com/EduardoConX/escpos v0.0.0-20210331165021-dfba0aa7af7d/go.mod h1:ukkUQ1RQt6fWTd7QR01sqsZlQlFt/+L0Ajejzbz8eHw=
 github.com/knq/escpos v0.0.0-20201012084129-81d0344e35fa h1:Gqf0Q4Wra8RDXSaHwNKHcEJY0osaSklMXi5EnLLpuhM=
 github.com/knq/escpos v0.0.0-20201012084129-81d0344e35fa/go.mod h1:WEAqQJjNLSktlp0XxBiiftFrcb0RHKo9g/2hCfpYoIo=

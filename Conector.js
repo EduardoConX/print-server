@@ -19,6 +19,13 @@ class Conector {
     });
   }
 
+  enter() {
+    this.operaciones.push({
+      accion: "Enter",
+      datos: "",
+    });
+  }
+
   feed(nLineas) {
     if (Number.isInteger(nLineas) && nLineas > 0) {
       this.operaciones.push({

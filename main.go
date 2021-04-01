@@ -1,13 +1,15 @@
 package main
 
 import (
-	/* "bufio" */
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 	"strings"
-	/* "github.com/knq/escpos" */)
+)
 
 type Operacion struct {
 	Accion string
@@ -53,53 +55,85 @@ func configurarCORS(w *http.ResponseWriter, r *http.Request) {
 
 func imprimir(operaciones []Operacion, impresora string) {
 	//Inicializa la impresora
-	fmt.Println(impresora)
-	/* f, err := os.OpenFile(impresora, os.O_RDWR, 0)
+	f, err := os.Create("impresion")
+
+	//Checa si hay errores, en caso de haber se cierra el programa
 	if err != nil {
 		panic(err)
 	}
+
+	//Es buena practica cerrar un archivo inmediatamente despues de crearlo
 	defer f.Close()
-	w := bufio.NewReadWriter(f)
-	p := escpos.New(w)
-	p.Init()*/
+
+	w := bufio.NewWriter(f)
+	w.Write(inicia())
 
 	//Por cada operacion recibida
-	for _, o := range operaciones {
-		manejarOperaciones(o)
-		//TODO Switch case con funciones para cada tipo de operacion permitida
+	for _, operacion := range operaciones {
+		w.Write(manejarOperaciones(operacion))
 	}
-	/* p.End()
-	   w.Flush() */
+
+	w.Flush()
 }
 
-func manejarOperaciones(operacion Operacion) {
+func manejarOperaciones(operacion Operacion) []byte {
 	switch operacion.Accion {
 	case "TextoPlano":
-		fmt.Println("Escribe de manera plana:", operacion.Datos)
-		/* p.Write(operacion.Datos) */
-	case "TextoConAcentos":
-		fmt.Println("Escribe con acentos:", operacion.Datos)
-		/* p.Write(operacion.Datos) */
+		return texto(operacion.Datos)
 	case "Feed":
-		fmt.Println("Feed:", operacion.Datos)
-		/* p.FormfeedN(5) */
+		return feed(operacion.Datos)
 	case "TamanioFuente":
-		valores := strings.Split(operacion.Datos, ",")
-		fmt.Println("Ancho:", valores[0])
-		fmt.Println("Alto:", valores[1])
-		/* p.SetFontSize(valores[0], valores[1]) */
-	case "Fuente":
-		fmt.Println("Fuente:", operacion.Datos)
-		/* p.SetFont("C") */
-	case "Enfasis":
-		fmt.Println("Enfasis:", operacion.Datos)
-		/* p.SetEmphasize(1) */
-	case "Alineacion":
-		fmt.Println("Alineacion:", operacion.Datos)
-	case "Cortar":
-		fmt.Println("Cortar")
-		/* p.Cut() */
-	case "CortarParcialmente":
-		fmt.Println("Cortar parcialmente")
+		return fontSize(operacion.Datos)
+	case "Alinear":
+		return align(operacion.Datos)
+	case "Enter":
+		return enter()
 	}
+
+	return []byte("")
+}
+
+func inicia() []byte {
+	return []byte("\x1B@")
+}
+
+func fontSize(datos string) []byte {
+	valores := strings.Split(datos, ",")
+	ancho, err := strconv.Atoi(valores[0])
+	if err != nil {
+		panic(err)
+	}
+	alto, err := strconv.Atoi(valores[1])
+	if err != nil {
+		panic(err)
+	}
+	return []byte(fmt.Sprintf("\x1D!%c", ((ancho-1)<<4)|(alto-1)))
+}
+
+func align(align string) []byte {
+	switch align {
+	case "I":
+		return []byte(fmt.Sprintf("\x1Ba%c", 0))
+	case "C":
+		return []byte(fmt.Sprintf("\x1Ba%c", 1))
+	case "D":
+		return []byte(fmt.Sprintf("\x1Ba%c", 2))
+	}
+	return []byte(fmt.Sprintf("\x1Ba%c", 0))
+}
+
+func texto(texto string) []byte {
+	return []byte(texto)
+}
+
+func feed(nLineas string) []byte {
+	n, err := strconv.Atoi(nLineas)
+	if err != nil {
+		panic(err)
+	}
+	return []byte(fmt.Sprintf("\x1Bd%c", n))
+}
+
+func enter() []byte {
+	return []byte("\n")
 }
