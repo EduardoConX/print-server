@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -74,6 +75,9 @@ func imprimir(operaciones []Operacion, impresora string) {
 	}
 
 	w.Flush()
+	fmt.Println(impresora)
+	Copy("impresion", impresora)
+	/* Copy("impresion", "\\\\EduardX-PC\\\\POS-58-Series") */
 }
 
 func manejarOperaciones(operacion Operacion) []byte {
@@ -136,4 +140,22 @@ func feed(nLineas string) []byte {
 
 func enter() []byte {
 	return []byte("\n")
+}
+
+func Copy(source, dest string) (bool, error) {
+	fd1, err := os.Open(source)
+	if err != nil {
+		return false, err
+	}
+	defer fd1.Close()
+	fd2, err := os.OpenFile(dest, os.O_WRONLY|os.O_CREATE, 0644)
+	if err != nil {
+		return false, err
+	}
+	defer fd2.Close()
+	_, e := io.Copy(fd2, fd1)
+	if e != nil {
+		return false, e
+	}
+	return true, nil
 }

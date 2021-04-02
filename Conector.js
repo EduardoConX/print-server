@@ -1,8 +1,8 @@
 class Conector {
-  constructor(impresora = "POS-58-SERIES", ruta = "http://localhost:8080/") {
-    this.impresora = impresora;
-    this.ruta = ruta;
+  constructor(impresora, nombrePC, ruta) {
     this.operaciones = []; //Arreglo donde se iran acumulando las operaciones a realizar
+    this.impresora = `\\\\${nombrePC}\\\\${impresora}`;
+    this.ruta = ruta;
   }
 
   textoPlano(texto) {
