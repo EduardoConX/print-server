@@ -10,6 +10,8 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"golang.org/x/text/encoding/charmap"
 )
 
 type Operacion struct {
@@ -75,9 +77,8 @@ func imprimir(operaciones []Operacion, impresora string) {
 	}
 
 	w.Flush()
-	fmt.Println(impresora)
-	Copy("impresion", impresora)
-	/* Copy("impresion", "\\\\EduardX-PC\\\\POS-58-Series") */
+	/* Copy("impresion", impresora) */
+	copy("impresion", "\\\\EduardX-PC\\\\POS-58-Series")
 }
 
 func manejarOperaciones(operacion Operacion) []byte {
@@ -127,7 +128,17 @@ func align(align string) []byte {
 }
 
 func texto(texto string) []byte {
-	return []byte(texto)
+	//Convierte el texto a byte
+	b := []byte(texto)
+
+	//Decodifica los acentos y las ñ
+	c, e := charmap.CodePage850.NewEncoder().Bytes(b)
+	if e != nil {
+		log.Fatal(e)
+	}
+
+	//Imprime el texto codificado
+	return []byte(c)
 }
 
 func feed(nLineas string) []byte {
@@ -142,7 +153,7 @@ func enter() []byte {
 	return []byte("\n")
 }
 
-func Copy(source, dest string) (bool, error) {
+func copy(source, dest string) (bool, error) {
 	fd1, err := os.Open(source)
 	if err != nil {
 		return false, err

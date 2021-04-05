@@ -2,3 +2,6 @@ github.com/EduardoConX/escpos v0.0.0-20210331165021-dfba0aa7af7d h1:4qMR6PEn4Nun
 github.com/EduardoConX/escpos v0.0.0-20210331165021-dfba0aa7af7d/go.mod h1:ukkUQ1RQt6fWTd7QR01sqsZlQlFt/+L0Ajejzbz8eHw=
 github.com/knq/escpos v0.0.0-20201012084129-81d0344e35fa h1:Gqf0Q4Wra8RDXSaHwNKHcEJY0osaSklMXi5EnLLpuhM=
 github.com/knq/escpos v0.0.0-20201012084129-81d0344e35fa/go.mod h1:WEAqQJjNLSktlp0XxBiiftFrcb0RHKo9g/2hCfpYoIo=
+golang.org/x/text v0.3.6 h1:aRYxNxv6iGQlyVaZmk6ZgYEDa+Jg18DxebPSrd6bg1M=
+golang.org/x/text v0.3.6/go.mod h1:5Zoc/QRtKVWzQhOtBMvqHzDpF6irO9z98xDceosuGiQ=
+golang.org/x/tools v0.0.0-20180917221912-90fa682c2a6e/go.mod h1:n7NCudcB/nEzxVGmLbDWY5pfWTLqBcC2KZ6jyYvM4mQ=
